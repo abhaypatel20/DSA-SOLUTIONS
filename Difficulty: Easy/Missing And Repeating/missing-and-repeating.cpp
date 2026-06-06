@@ -2,22 +2,45 @@ class Solution {
   public:
     vector<int> findTwoElement(vector<int>& arr) {
     int n= arr.size();
-    // s - sum = x-y
-    // s2 -sum2;
-    long long sum =  (long long) n * (n+1) /2;
-    long long sum2 = ( (long long)n * (n+1) * (2*n+1)) /6;
-    long long s=0,s2=0;
-    for(int i=0;i<n;i++){
-       s += arr[i];
-       s2 +=(long long )arr[i] * (long long )arr[i] ;
-    }
-    long long value1 = s - sum;  // x-y ;
-    long long value2 = s2 -sum2;
-    value2 = value2 / value1;      // x+y ;
-    long long x =(value1 +value2) /2;
-    long long  y = x-value1;
-    
-    return {(int) x,(int)y};
+    int xr =0;
+   for(int i=0;i<n;i++){
+       xr = xr ^ arr[i];
+       xr = xr ^ (i+1);
+   }
+   int bitNo =0;
+   while(1){
+       if( (xr & (1<<bitNo)) !=0){
+           break;
+       }
+       bitNo++;
+   }
+   int zero =0;
+   int one = 0;
+   for(int i=0;i<n;i++){
+        if( (arr[i] & (1<<bitNo)) !=0){
+            one = one ^ arr[i];
+        }
+        else{
+            zero =zero ^ arr[i];
+        }
+   }
+   
+    for(int i=1;i<=n;i++){
+        if( (i & (1<<bitNo)) !=0){
+            one = one ^ i ;
+        }
+        else{
+            zero =zero ^ i;
+        }
+   }
+   int cnt =0;
+   for(int i=0;i<n;i++){
+       if(arr[i] ==zero) cnt++;
+   }
+   if(cnt ==2) return {zero,one};
+   return {one,zero};
+   
+   
     
     }
 };
